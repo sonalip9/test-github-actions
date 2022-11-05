@@ -25,6 +25,11 @@ jobs:
 
       - name: Install dependencies
         run: yarn ci
+      
+      - name: Setup Git user
+        run: |
+          git config --global user.email "sonali.parekh912@gmail.com"
+          git config --global user.name "Sonali Parekh"
 
       - name: Release
         env:
