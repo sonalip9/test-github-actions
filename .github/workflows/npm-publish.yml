@@ -1,0 +1,63 @@
+name: Release
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions: read-all|write-all
+
+jobs:
+  release:
+    if: github.event.repository.fork == false
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Install dependencies
+        run: yarn ci:install
+
+      - name: Setup Git user
+        run: |
+          git config --global user.email "sonali.parekh912@gmail.com"
+          git config --global user.name "Sonali Parekh"
+
+      # Find the version to be released and store it in github env
+      - name: Get release version
+        id: release-version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "VERSION=$(yarn release --release-version --npm.skipChecks | egrep -o '^([0-9]{1,}\.){2}[0-9]{1,}$')" >> $GITHUB_OUTPUT
+
+      - name: Print release version
+        run: echo "The next release version is ${{ steps.release-version.outputs.VERSION }}"
+
+      # Create a release branch with the naming as - release-v{version}
+      # push the branch to origin
+      - name: Create branch for release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout -b release-v${{ steps.release-version.outputs.VERSION }}
+          git remote set-url --push origin https://sonalip9:${{ secrets.GITHUB_TOKEN }}@github.com/sonalip9/react-native-circle-layout.git
+          git push -u origin release-v${{ steps.release-version.outputs.VERSION }}
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn release --npm.skipChecks
+
+      # raise a pr for this branch
+      - name: Create pull request
+        run: gh pr create -B main -H release-v${{ steps.release-version.outputs.VERSION }} --title 'Release v${{ steps.release-version.outputs.VERSION }}' --body 'Created by Github action'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
