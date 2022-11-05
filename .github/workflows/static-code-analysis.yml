@@ -5,13 +5,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  
-  setup-user:
-    uses: ./.github/workflows/setup-user.yml
-    secrets: inherit
-    needs: install-dependencies
-
-
   run-linter:
     name: Run linter
     runs-on: ubuntu-latest
