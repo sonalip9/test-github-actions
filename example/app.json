@@ -1,0 +1,23 @@
+{
+  "name": "react-native-test-gh-actions-example",
+  "displayName": "TestGhActions Example",
+  "expo": {
+    "name": "react-native-test-gh-actions-example",
+    "slug": "react-native-test-gh-actions-example",
+    "description": "Example app for react-native-test-gh-actions",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "jsEngine": "hermes",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
