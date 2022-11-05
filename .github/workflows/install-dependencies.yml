@@ -16,4 +16,4 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn ci:install
+        run: yarn ci
