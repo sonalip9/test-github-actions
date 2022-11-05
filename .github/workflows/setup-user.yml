@@ -1,9 +1,10 @@
-on: workflow_call
+on:
+  workflow_call:
 
 jobs:
   setup-user:
     name: Set up user config
-    uses: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Authenticate with private NPM package
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
