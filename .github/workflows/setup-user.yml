@@ -1,0 +1,13 @@
+on: workflow_call
+
+jobs:
+  setup-user:
+    name: Set up user config
+    uses: ubuntu-latest
+    steps:
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - name: Setup Git user
+        run: |
+          git config --global user.email "sonali.parekh912@gmail.com"
+          git config --global user.name "Sonali Parekh"
