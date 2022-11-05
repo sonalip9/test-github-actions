@@ -1,0 +1,14 @@
+on:
+  pull-request:
+    branches:
+      - 'main'
+  workflow_dispatch
+
+jobs:
+  run-linter:
+    name: Run linter
+    uses: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/install-dependencies.yml
+      - uses: ./.github/workflows/setup-user.yml
+      - run: yarn lint
